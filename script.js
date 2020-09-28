@@ -1,3 +1,12 @@
+//Event listener for the intro button to start displaying questions.
+document
+	.querySelector(".intro-button")
+	.addEventListener("click", questionDisplay);
+
+//////////////////
+/////////////TIMER
+//////////////////
+
 //Timer vars
 var timer = document.querySelector(".timer");
 var timeLeft = 100;
@@ -24,6 +33,10 @@ function randomize(a, b) {
 
 // timeKeeper();
 
+/////////////
+////QUESTIONS///////////////
+//////////////
+
 //sample QUESTION.  I want to serve the answer bank and questions randomly as well.
 //Individual questions will be nested in a questionBank object.
 //ANSWERS will contain 3 false answers and a correct one.  Letters/display order will be assigned randomly.
@@ -43,7 +56,7 @@ var questionBank = [
 
 	{
 		questionText:
-			"TH234234IS IS THE TEXT FOR A QUESTION. 234234 IT WILL BE A LITTLE LONGER I THINK.",
+			"QUESTION 2 QUESTION 2 QUESTION 2 QUESTION 2 QUESTION 2 QUESTION 2",
 		answerBank: [
 			{ correct: false, answer: "HTM23423L" },
 			{ correct: false, answer: "C34234SS" },
@@ -82,9 +95,20 @@ function createAnswerButton(a) {
 	answerButtonsDiv.append(button);
 }
 
+//Function to CLEAR our display
+
+function clearDisplay() {
+	mainDisplay.innerHTML = "";
+	subDisplay.innerHTML = "";
+	answerButtonsDiv.innerHTML = "";
+}
+
 function questionDisplay() {
-	//TODO: randomly pick the question.  Handle multiple questions.
+	//Clear the display
+	clearDisplay();
+	//pick a random question;
 	var currentQuestion = returnRandomQuestion();
+
 	console.log("CURRENT QUESTION", currentQuestion);
 	mainDisplay.textContent = currentQuestion["questionText"];
 
@@ -106,4 +130,3 @@ function questionDisplay() {
 // console.log("RANDOM QUESTION", sampQuestions.returnRandomQuestion());
 
 console.log("RANDOM QUESTION", returnRandomQuestion());
-questionDisplay();
