@@ -97,12 +97,22 @@ var questionBank = [
 function returnRandomQuestion() {
 	var qIndex = [Math.floor(Math.random() * questionBank.length)];
 
-	return questionBank[qIndex];
+	console.log("NO SPLICE:", questionBank[qIndex]);
+	console.log("ALL QUESTIONS:", questionBank);
+	// console.log("SPLICE:", questionBank.splice(qIndex, 1));
+	var removedSplice = questionBank.splice(qIndex);
+
+	console.log("REMOVED SPLICE", removedSplice);
+	console.log("REMOVED SPLICE KEYS", Object.keys(removedSplice));
+	console.log("REMOVED SPLICE entries", Object.entries(removedSplice));
+	console.log("REMOVED SPLICE values", Object.values(removedSplice));
+
+	return Object.keys(removedSplice);
 }
 
 //functions to draw a question
 var mainDisplay = document.querySelector(".main-display");
-var subDisplay = document.querySelector(".sub-display");
+var subDisplay = document.querySelector(".alert");
 var answerButtonsDiv = document.querySelector(".answer-buttons-div");
 
 function createAnswerButton(a) {
@@ -138,12 +148,14 @@ answerButtonsDiv.addEventListener("click", function (event) {
 		console.log("choice:", choice);
 
 		//We need to use else if to catch the bug where the initial button messes up our time.
-		if (choice == true) {
+		if (choice == "true") {
 			questionDisplay();
-		} else if (!choice == false) {
+			subDisplay.innerHTML = "YOU GOT IT RIGHT!";
+		} else if (choice == "false") {
 			questionDisplay();
 			timeLeft -= 10;
 			console.log(timeLeft);
+			subDisplay.innerHTML = "WRONG ANSWER.  10 SECONDS DEDUCTED.";
 		}
 	}
 });
@@ -151,8 +163,11 @@ answerButtonsDiv.addEventListener("click", function (event) {
 function questionDisplay() {
 	//Clear the display
 	clearDisplay();
+
 	//pick a random question;
 	var currentQuestion = returnRandomQuestion();
+	//randomize answer order
+	// currentQuestion.sort(randomize());
 
 	console.log("CURRENT QUESTION", currentQuestion);
 	mainDisplay.textContent = currentQuestion["questionText"];
@@ -167,6 +182,7 @@ function questionDisplay() {
 	for (var i = 0; i < 4; i++) {
 		createAnswerButton(currentQuestion.answerBank[i]);
 	}
+	//update if last question was right or wrong
 }
 // console.log("RANDOM QUESTION", sampQuestions.returnRandomQuestion());
 
