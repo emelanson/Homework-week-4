@@ -1,7 +1,8 @@
 //Event listener for the intro button to start displaying questions.
-document
-	.querySelector(".intro-button")
-	.addEventListener("click", questionDisplay);
+document.querySelector(".intro-button").addEventListener("click", function () {
+	timeKeeper();
+	questionDisplay();
+});
 
 //////////////////
 /////////////TIMER
@@ -9,9 +10,9 @@ document
 
 //Timer vars
 var timer = document.querySelector(".timer");
-var timeLeft = 100;
 
 //Here is function for timekeeping.  It will eventually subtract from timeLeft when wrong answers happen.
+var timeLeft = 100;
 
 function timeKeeper() {
 	var timeInterval = setInterval(function () {
@@ -31,11 +32,9 @@ function randomize(a, b) {
 	return Math.random() - 0.5;
 }
 
-// timeKeeper();
-
-/////////////
+///////////////////////
 ////QUESTIONS///////////////
-//////////////
+//////////////////////////
 
 //sample QUESTION.  I want to serve the answer bank and questions randomly as well.
 //Individual questions will be nested in a questionBank object.
@@ -57,6 +56,33 @@ var questionBank = [
 	{
 		questionText:
 			"QUESTION 2 QUESTION 2 QUESTION 2 QUESTION 2 QUESTION 2 QUESTION 2",
+		answerBank: [
+			{ correct: false, answer: "HTM23423L" },
+			{ correct: false, answer: "C34234SS" },
+			{ correct: false, answer: "J23423S" },
+			{ correct: true, answer: "Re234234actJS" },
+		],
+	},
+	{
+		questionText: "QUESTION 55555555555555555555555555555555",
+		answerBank: [
+			{ correct: false, answer: "HTM23423L" },
+			{ correct: false, answer: "C34234SS" },
+			{ correct: false, answer: "J23423S" },
+			{ correct: true, answer: "Re234234actJS" },
+		],
+	},
+	{
+		questionText: "QUESTION 4444444444444444444444444444444444444444",
+		answerBank: [
+			{ correct: false, answer: "HTM23423L" },
+			{ correct: false, answer: "C34234SS" },
+			{ correct: false, answer: "J23423S" },
+			{ correct: true, answer: "Re234234actJS" },
+		],
+	},
+	{
+		questionText: "QUESTION 333333333333333333333333333333333333333333333",
 		answerBank: [
 			{ correct: false, answer: "HTM23423L" },
 			{ correct: false, answer: "C34234SS" },
@@ -90,7 +116,7 @@ function createAnswerButton(a) {
 	button.setAttribute("type", "button");
 	button.className = "btn btn-primary btn-lg w-25 mt-2";
 
-	console.log("answerbutton property:", button);
+	// console.log("answerbutton property:", button);
 
 	answerButtonsDiv.append(button);
 }
@@ -102,6 +128,25 @@ function clearDisplay() {
 	subDisplay.innerHTML = "";
 	answerButtonsDiv.innerHTML = "";
 }
+
+//use a universal script to check if we clicked the right answer, otherwise deduct time.
+answerButtonsDiv.addEventListener("click", function (event) {
+	event.preventDefault();
+
+	if (event.target.matches("button")) {
+		var choice = event.target.getAttribute("correct");
+		console.log("choice:", choice);
+
+		//We need to use else if to catch the bug where the initial button messes up our time.
+		if (choice == true) {
+			questionDisplay();
+		} else if (!choice == false) {
+			questionDisplay();
+			timeLeft -= 10;
+			console.log(timeLeft);
+		}
+	}
+});
 
 function questionDisplay() {
 	//Clear the display
@@ -120,10 +165,6 @@ function questionDisplay() {
 
 	//can I use my second technique to return the desired object?
 	for (var i = 0; i < 4; i++) {
-		console.log(
-			"Does this look something up",
-			Object.values(currentQuestion)[i]
-		);
 		createAnswerButton(currentQuestion.answerBank[i]);
 	}
 }
