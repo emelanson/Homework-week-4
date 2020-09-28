@@ -28,8 +28,9 @@ function randomize(a, b) {
 //Individual questions will be nested in a questionBank object.
 //ANSWERS will contain 3 false answers and a correct one.  Letters/display order will be assigned randomly.
 
-var sampQuestions = {
-	one: {
+//DO IT AS AN ARRAY OF OBJECTS AND WHAT YOU WERE THINKING WORKS!
+var questionBank = [
+	{
 		questionText:
 			"THIS IS THE TEXT FOR A QUESTION.  IT WILL BE A LITTLE LONGER I THINK.",
 		answerBank: [
@@ -40,7 +41,7 @@ var sampQuestions = {
 		],
 	},
 
-	two: {
+	{
 		questionText:
 			"TH234234IS IS THE TEXT FOR A QUESTION. 234234 IT WILL BE A LITTLE LONGER I THINK.",
 		answerBank: [
@@ -52,14 +53,12 @@ var sampQuestions = {
 	},
 
 	//SLOW DOWN AND WRITE THIS IN STEPS.  FIRST RETURN A SINGLE ITEM.  THEN WE WILL WORRY ABOUT SPLICING OUT THE QUESTIONS SO WE DON'T RETURN THE SAME ONE TWICE.
-};
+];
 
 function returnRandomQuestion() {
-	var questionObjIndex = [
-		Math.floor(Math.random() * Object.values(sampQuestions).length),
-	];
-	// Took a long time to figure this part out.  We can treat Object.entries as if it were an array and use [] AFTER, NOT INSIDE, the parenthesis to access it.
-	return Object.entries(sampQuestions)[questionObjIndex];
+	var qIndex = [Math.floor(Math.random() * questionBank.length)];
+
+	return questionBank[qIndex];
 }
 
 //functions to draw a question
@@ -101,7 +100,7 @@ function questionDisplay() {
 			"Does this look something up",
 			Object.values(currentQuestion)[i]
 		);
-		createAnswerButton(currentQuestion[answerBank[i]]);
+		createAnswerButton(currentQuestion.answerBank[i]);
 	}
 }
 // console.log("RANDOM QUESTION", sampQuestions.returnRandomQuestion());
