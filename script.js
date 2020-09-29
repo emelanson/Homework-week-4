@@ -19,11 +19,12 @@ function timeKeeper() {
 		timeLeft--;
 		timer.innerHTML = "TIMER: " + timeLeft;
 
-		if (timeLeft === 0) {
+		if (timeLeft <= 0) {
 			clearInterval(timeInterval);
+			endGame();
 			//Function here to draw the end screen
 		}
-		console.log("timer", timeLeft);
+		// console.log("timer", timeLeft);
 	}, 1000);
 }
 
@@ -97,17 +98,14 @@ var questionBank = [
 function returnRandomQuestion() {
 	var qIndex = [Math.floor(Math.random() * questionBank.length)];
 
-	console.log("NO SPLICE:", questionBank[qIndex]);
-	console.log("ALL QUESTIONS:", questionBank);
-	// console.log("SPLICE:", questionBank.splice(qIndex, 1));
-	var removedSplice = questionBank.splice(qIndex);
+	// console.log("NO SPLICE:", questionBank[qIndex]);
+	// console.log("ALL QUESTIONS:", questionBank);
 
-	console.log("REMOVED SPLICE", removedSplice);
-	console.log("REMOVED SPLICE KEYS", Object.keys(removedSplice));
-	console.log("REMOVED SPLICE entries", Object.entries(removedSplice));
-	console.log("REMOVED SPLICE values", Object.values(removedSplice));
+	//splice out the randomly selected question
+	var removedSplice = questionBank.splice(qIndex, 1);
 
-	return Object.keys(removedSplice);
+	//lookup the object within the array, so it returns the object and not the array.
+	return removedSplice[0];
 }
 
 //functions to draw a question
@@ -151,11 +149,13 @@ answerButtonsDiv.addEventListener("click", function (event) {
 		if (choice == "true") {
 			questionDisplay();
 			subDisplay.innerHTML = "YOU GOT IT RIGHT!";
+			console.log("YOU DID TRUEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
 		} else if (choice == "false") {
 			questionDisplay();
 			timeLeft -= 10;
 			console.log(timeLeft);
 			subDisplay.innerHTML = "WRONG ANSWER.  10 SECONDS DEDUCTED.";
+			console.log("YOU DID FAAAAAAAAAAAAAAAAAAAAAAAALSE");
 		}
 	}
 });
@@ -166,6 +166,8 @@ function questionDisplay() {
 
 	//pick a random question;
 	var currentQuestion = returnRandomQuestion();
+
+	gameOverCheck(currentQuestion);
 	//randomize answer order
 	// currentQuestion.sort(randomize());
 
@@ -184,6 +186,26 @@ function questionDisplay() {
 	}
 	//update if last question was right or wrong
 }
-// console.log("RANDOM QUESTION", sampQuestions.returnRandomQuestion());
 
-console.log("RANDOM QUESTION", returnRandomQuestion());
+//when currentQuestion can't be assigned a new question (the bank has run out), we end the game.
+function gameOverCheck(currentquest) {
+	if (!currentquest) {
+		endGame();
+	}
+}
+
+function endGame() {
+	clearDisplay();
+
+	//record time left as score
+	var score = timeLeft;
+	clearInterval(timeInterval);
+
+	mainDisplay.innerHTML = "You're done!";
+	subDisplay.innerHTML = "Your final score is " + score;
+
+	// //create score submission
+	// let scoreForm = document.createElement("form", { type: "button" });
+
+	// answerButtonsDiv.innerHTML = form
+}
