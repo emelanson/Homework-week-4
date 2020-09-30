@@ -11,26 +11,22 @@ document.querySelector(".intro-button").addEventListener("click", function () {
 //Timer vars
 var timer = document.querySelector(".timer");
 
-//Here is function for timekeeping.  It will eventually subtract from timeLeft when wrong answers happen.
+//Here is function for timekeeping.
 var timeLeft = 100;
+//time stop ends our timer.
+var timeStop = false;
 
 function timeKeeper() {
 	var timeInterval = setInterval(function () {
-		timeLeft--;
-		timer.innerHTML = "TIMER: " + timeLeft;
-
-		if (timeLeft <= 0) {
+		if (timeLeft <= 0 || timeStop == true) {
 			clearInterval(timeInterval);
 			endGame();
 			//Function here to draw the end screen
 		}
+		timeLeft--;
+		timer.innerHTML = "TIMER: " + timeLeft;
 		// console.log("timer", timeLeft);
 	}, 1000);
-}
-
-//from stack overflow.  Used to sort our questions and answers randomly.
-function randomize(a, b) {
-	return Math.random() - 0.5;
 }
 
 ///////////////////////
@@ -44,51 +40,78 @@ function randomize(a, b) {
 //DO IT AS AN ARRAY OF OBJECTS AND WHAT YOU WERE THINKING WORKS!
 var questionBank = [
 	{
-		questionText:
-			"THIS IS THE TEXT FOR A QUESTION.  IT WILL BE A LITTLE LONGER I THINK.",
+		questionText: "By default, this tag produces the largest text size in HTML",
 		answerBank: [
-			{ correct: false, answer: "HTML" },
-			{ correct: false, answer: "CSS" },
-			{ correct: false, answer: "JS" },
-			{ correct: true, answer: "ReactJS" },
+			{ correct: false, answer: "p" },
+			{ correct: true, answer: "h1" },
+			{ correct: false, answer: "a" },
+			{ correct: false, answer: "h6" },
+
 		],
 	},
 
 	{
+		questionText: "In HTML, which tag will make an unordered list?",
+		answerBank: [
+			{ correct: false, answer: "li" },
+			{ correct: false, answer: "list" },
+			{ correct: false, answer: "ol" },
+			{ correct: true, answer: "ul" },
+		],
+	},
+	{
 		questionText:
-			"QUESTION 2 QUESTION 2 QUESTION 2 QUESTION 2 QUESTION 2 QUESTION 2",
+			"Which HTML tag can be used to link Javascript into a web page?",
 		answerBank: [
-			{ correct: false, answer: "HTM23423L" },
-			{ correct: false, answer: "C34234SS" },
-			{ correct: false, answer: "J23423S" },
-			{ correct: true, answer: "Re234234actJS" },
+			{ correct: false, answer: "javascript" },
+			{ correct: false, answer: "style" },
+			{ correct: true, answer: "script" },
+			{ correct: false, answer: "a href" },
 		],
 	},
 	{
-		questionText: "QUESTION 55555555555555555555555555555555",
+		questionText: "Which of the following is not a programming language?",
 		answerBank: [
-			{ correct: false, answer: "HTM23423L" },
-			{ correct: false, answer: "C34234SS" },
-			{ correct: false, answer: "J23423S" },
-			{ correct: true, answer: "Re234234actJS" },
+			{ correct: true, answer: "COLEBOL" },
+			{ correct: false, answer: "malbolge" },
+			{ correct: false, answer: "leet" },
+			{ correct: false, answer: "INTERCAL" },
 		],
 	},
 	{
-		questionText: "QUESTION 4444444444444444444444444444444444444444",
+		questionText: "Which of the following is widely-regarded to be the first programming language?",
 		answerBank: [
-			{ correct: false, answer: "HTM23423L" },
-			{ correct: false, answer: "C34234SS" },
-			{ correct: false, answer: "J23423S" },
-			{ correct: true, answer: "Re234234actJS" },
+			{ correct: false, answer: "C" },
+			{ correct: true, answer: "FORTRAN" },
+			{ correct: false, answer: "COBOL" },
+			{ correct: false, answer: "Basic" },
 		],
 	},
 	{
-		questionText: "QUESTION 333333333333333333333333333333333333333333333",
+		questionText: "Which of the following is not a data-type supported by Javascript?",
 		answerBank: [
-			{ correct: false, answer: "HTM23423L" },
-			{ correct: false, answer: "C34234SS" },
-			{ correct: false, answer: "J23423S" },
-			{ correct: true, answer: "Re234234actJS" },
+			{ correct: true, answer: "Tuple" },
+			{ correct: false, answer: "String" },
+			{ correct: false, answer: "Bigint" },
+			{ correct: false, answer: "Null" },
+		],
+	},
+	{
+		questionText: "When was CSS created?",
+		answerBank: [
+			{ correct: true, answer: "1996" },
+			{ correct: false, answer: "2005" },
+			{ correct: false, answer: "2010" },
+			{ correct: false, answer: "1980" },
+		],
+	},
+	{
+		questionText: "HTML was created in what year?",
+		answerBank: [
+			{ correct: false, answer: "1989" },
+			{ correct: false, answer: "2001" },
+			{ correct: false, answer: "1975" },
+			{ correct: true, answer: "1993" },
 		],
 	},
 
@@ -98,9 +121,6 @@ var questionBank = [
 function returnRandomQuestion() {
 	var qIndex = [Math.floor(Math.random() * questionBank.length)];
 
-	// console.log("NO SPLICE:", questionBank[qIndex]);
-	// console.log("ALL QUESTIONS:", questionBank);
-
 	//splice out the randomly selected question
 	var removedSplice = questionBank.splice(qIndex, 1);
 
@@ -108,9 +128,10 @@ function returnRandomQuestion() {
 	return removedSplice[0];
 }
 
-//functions to draw a question
+//variables that hold the question display
 var mainDisplay = document.querySelector(".main-display");
-var subDisplay = document.querySelector(".alert");
+var subDisplay = document.querySelector(".sub-display");
+var alertDisplay = document.querySelector(".alert");
 var answerButtonsDiv = document.querySelector(".answer-buttons-div");
 
 function createAnswerButton(a) {
@@ -135,6 +156,8 @@ function clearDisplay() {
 	mainDisplay.innerHTML = "";
 	subDisplay.innerHTML = "";
 	answerButtonsDiv.innerHTML = "";
+	alertDisplay.innerHTML = "";
+
 }
 
 //use a universal script to check if we clicked the right answer, otherwise deduct time.
@@ -148,13 +171,13 @@ answerButtonsDiv.addEventListener("click", function (event) {
 		//We need to use else if to catch the bug where the initial button messes up our time.
 		if (choice == "true") {
 			questionDisplay();
-			subDisplay.innerHTML = "YOU GOT IT RIGHT!";
+			alertDisplay.innerHTML = "YOU GOT IT RIGHT!";
 			console.log("YOU DID TRUEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
 		} else if (choice == "false") {
 			questionDisplay();
 			timeLeft -= 10;
 			console.log(timeLeft);
-			subDisplay.innerHTML = "WRONG ANSWER.  10 SECONDS DEDUCTED.";
+			alertDisplay.innerHTML = "WRONG ANSWER.  10 SECONDS DEDUCTED.";
 			console.log("YOU DID FAAAAAAAAAAAAAAAAAAAAAAAALSE");
 		}
 	}
@@ -167,9 +190,10 @@ function questionDisplay() {
 	//pick a random question;
 	var currentQuestion = returnRandomQuestion();
 
-	gameOverCheck(currentQuestion);
-	//randomize answer order
-	// currentQuestion.sort(randomize());
+	if (!currentQuestion) {
+		endGame();
+		return;
+	}
 
 	console.log("CURRENT QUESTION", currentQuestion);
 	mainDisplay.textContent = currentQuestion["questionText"];
@@ -187,19 +211,12 @@ function questionDisplay() {
 	//update if last question was right or wrong
 }
 
-//when currentQuestion can't be assigned a new question (the bank has run out), we end the game.
-function gameOverCheck(currentquest) {
-	if (!currentquest) {
-		endGame();
-	}
-}
-
 function endGame() {
 	clearDisplay();
 
-	//record time left as score
+	//end our timekeeping.  Record score.
+	timeStop = true;
 	var score = timeLeft;
-	clearInterval(timeInterval);
 
 	mainDisplay.innerHTML = "You're done!";
 	subDisplay.innerHTML = "Your final score is " + score;
