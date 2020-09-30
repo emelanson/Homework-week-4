@@ -4,11 +4,6 @@ document.querySelector(".intro-button").addEventListener("click", function () {
 	questionDisplay();
 });
 
-//////////////////
-/////////////TIMER
-//////////////////
-
-//Timer vars
 var timer = document.querySelector(".timer");
 
 //Here is function for timekeeping.
@@ -29,15 +24,6 @@ function timeKeeper() {
 	}, 1000);
 }
 
-///////////////////////
-////QUESTIONS///////////////
-//////////////////////////
-
-//sample QUESTION.  I want to serve the answer bank and questions randomly as well.
-//Individual questions will be nested in a questionBank object.
-//ANSWERS will contain 3 false answers and a correct one.  Letters/display order will be assigned randomly.
-
-//DO IT AS AN ARRAY OF OBJECTS AND WHAT YOU WERE THINKING WORKS!
 var questionBank = [
 	{
 		questionText: "By default, this tag produces the largest text size in HTML",
@@ -128,6 +114,10 @@ function returnRandomQuestion() {
 	return removedSplice[0];
 }
 
+///////////
+//////DISPLAY LOGIC
+////////////
+
 //variables that hold the question display
 var mainDisplay = document.querySelector(".main-display");
 var subDisplay = document.querySelector(".sub-display");
@@ -151,7 +141,6 @@ function createAnswerButton(a) {
 }
 
 //Function to CLEAR our display
-
 function clearDisplay() {
 	mainDisplay.innerHTML = "";
 	subDisplay.innerHTML = "";
@@ -184,12 +173,11 @@ answerButtonsDiv.addEventListener("click", function (event) {
 });
 
 function questionDisplay() {
-	//Clear the display
 	clearDisplay();
 
-	//pick a random question;
 	var currentQuestion = returnRandomQuestion();
 
+	//if we run out of questions, end the game.
 	if (!currentQuestion) {
 		endGame();
 		return;
@@ -200,15 +188,9 @@ function questionDisplay() {
 
 	//generate button array
 	//pass object entries into createAnswerButton()
-
-	//!!!!!!!!!!!!!!!! Rethink this !!!!!!!!!!!!!!!!!!//
-	// Object.entries(sampQuestion.answerBank).forEach(createAnswerButton());
-
-	//can I use my second technique to return the desired object?
 	for (var i = 0; i < 4; i++) {
 		createAnswerButton(currentQuestion.answerBank[i]);
 	}
-	//update if last question was right or wrong
 }
 
 function endGame() {
@@ -221,8 +203,36 @@ function endGame() {
 	mainDisplay.innerHTML = "You're done!";
 	subDisplay.innerHTML = "Your final score is " + score;
 
-	// //create score submission
-	// let scoreForm = document.createElement("form", { type: "button" });
+	//create score submission dialog
+	var submitForm = document.createElement("input");
+	submitForm.setAttribute("placeholder", "Enter your name here!");
+	submitForm.setAttribute("type", "text");
+	submitForm.className = "w-25 m-5";
 
-	// answerButtonsDiv.innerHTML = form
+	var submitButton = document.createElement("button");
+	submitButton.textContent = "SUBMIT!"
+	submitButton.setAttribute("type", "button");
+	submitButton.className = "btn btn-primary btn-lg w-25 mx-auto mt-2";
+
+	subDisplay.append(submitForm);
+	subDisplay.append(submitButton);
+
+	submitButton.addEventListener("click", function (event) {
+		event.preventDefault();
+
+		var name = submitForm.value;
+		var highScore = [];
+		console.log(name);
+		highScore.push(name, timeLeft)
+		highScoreList.push(highScore);
+
+
+		localStorage.setItem("highScoreList", highScoreList);
+		console.log(highScoreList);
+		window.open("highScore.html", "_self");
+	});
+
 }
+
+var highScoreList = [];
+
