@@ -1,26 +1,19 @@
-//Event listener for the intro button to start displaying questions.
-document.querySelector(".intro-button").addEventListener("click", function () {
-	timeKeeper();
-	questionDisplay();
-});
-
-var timer = document.querySelector(".timer");
-
-//Here is function for timekeeping.
 var timeLeft = 100;
 //time stop ends our timer.
 var timeStop = false;
+var timer = document.querySelector(".timer");
 
 function timeKeeper() {
 	var timeInterval = setInterval(function () {
-		if (timeLeft <= 0 || timeStop == true) {
+		//once questions run out, the timeStop flag is thrown to end the timer
+		if (timeLeft <= 0) {
 			clearInterval(timeInterval);
 			endGame();
-			//Function here to draw the end screen
+		} else if (timeStop == true) {
+			clearInterval(timeInterval);
 		}
 		timeLeft--;
 		timer.innerHTML = "TIMER: " + timeLeft;
-		// console.log("timer", timeLeft);
 	}, 1000);
 }
 
@@ -101,7 +94,6 @@ var questionBank = [
 		],
 	},
 
-	//SLOW DOWN AND WRITE THIS IN STEPS.  FIRST RETURN A SINGLE ITEM.  THEN WE WILL WORRY ABOUT SPLICING OUT THE QUESTIONS SO WE DON'T RETURN THE SAME ONE TWICE.
 ];
 
 function returnRandomQuestion() {
@@ -113,10 +105,6 @@ function returnRandomQuestion() {
 	//lookup the object within the array, so it returns the object and not the array.
 	return removedSplice[0];
 }
-
-///////////
-//////DISPLAY LOGIC
-////////////
 
 //variables that hold the question display
 var mainDisplay = document.querySelector(".main-display");
@@ -131,16 +119,14 @@ function createAnswerButton(a) {
 	button.textContent = a.answer;
 	button.setAttribute("correct", a.correct);
 
-	//for bootstrap
+	//bootstrap attrs
 	button.setAttribute("type", "button");
 	button.className = "btn btn-primary btn-lg w-25 mt-2";
-
-	// console.log("answerbutton property:", button);
 
 	answerButtonsDiv.append(button);
 }
 
-//Function to CLEAR our display
+//Function to CLEAR our display contents
 function clearDisplay() {
 	mainDisplay.innerHTML = "";
 	subDisplay.innerHTML = "";
@@ -155,19 +141,15 @@ answerButtonsDiv.addEventListener("click", function (event) {
 
 	if (event.target.matches("button")) {
 		var choice = event.target.getAttribute("correct");
-		console.log("choice:", choice);
 
 		//We need to use else if to catch the bug where the initial button messes up our time.
 		if (choice == "true") {
 			questionDisplay();
 			alertDisplay.innerHTML = "YOU GOT IT RIGHT!";
-			console.log("YOU DID TRUEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
 		} else if (choice == "false") {
 			questionDisplay();
 			timeLeft -= 10;
-			console.log(timeLeft);
 			alertDisplay.innerHTML = "WRONG ANSWER.  10 SECONDS DEDUCTED.";
-			console.log("YOU DID FAAAAAAAAAAAAAAAAAAAAAAAALSE");
 		}
 	}
 });
@@ -183,15 +165,17 @@ function questionDisplay() {
 		return;
 	}
 
-	console.log("CURRENT QUESTION", currentQuestion);
 	mainDisplay.textContent = currentQuestion["questionText"];
 
 	//generate button array
-	//pass object entries into createAnswerButton()
+	//pass currentQuestion object entries into createAnswerButton()
 	for (var i = 0; i < 4; i++) {
 		createAnswerButton(currentQuestion.answerBank[i]);
 	}
 }
+
+//array for holding highscores
+var highScoreList = [];
 
 function endGame() {
 	clearDisplay();
@@ -217,6 +201,8 @@ function endGame() {
 	subDisplay.append(submitForm);
 	subDisplay.append(submitButton);
 
+	//logic for submitButton.  
+	//Loads highscores from storage, takes current score and name, packs them back into local storage.
 	submitButton.addEventListener("click", function (event) {
 		event.preventDefault();
 
@@ -229,17 +215,18 @@ function endGame() {
 
 		var name = submitForm.value;
 		var highScore = [];
-		console.log(name);
 		highScore.push(name, timeLeft)
 		highScoreList.push(highScore);
 
 
 		localStorage.setItem("highScoreList", JSON.stringify(highScoreList));
-		console.log(highScoreList);
 		window.open("highScores.html", "_self");
 	});
 
 }
 
-var highScoreList = [];
-
+//Event listener for the intro button to start displaying questions.
+document.querySelector(".intro-button").addEventListener("click", function () {
+	timeKeeper();
+	questionDisplay();
+});

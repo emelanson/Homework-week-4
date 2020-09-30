@@ -8,7 +8,6 @@
 	<meta name="Description" content="Homework week 4 code quiz" />
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
 		integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous" />
-	<link rel="stylesheet" href="style.css" />
 	<title>HIGH SCORES</title>
 </head>
 
@@ -40,21 +39,20 @@
 		</div>
 	</div>
 	<script type="text/javascript">
-
+		//load highscores and parse them
 		var HSstring = localStorage.getItem("highScoreList");
 		highScoresList = JSON.parse(HSstring);
 
-		console.log(highScoresList);
-
 		var tableEntries = document.querySelector("#entries");
 
+		//Generate a line in our table for each entry in high score list.
 		for (var i = 0; i < highScoresList.length; i++) {
 			createHighScoreTable(highScoresList[i]);
-			console.log("Highscorelist[i]", highScoresList[i]);
 		}
 
 
-
+		//builds a new entry in our table
+		//creates a new th and 2 tds, assigns them proper values.
 		function createHighScoreTable(array) {
 			let tableRow = document.createElement("tr");
 
@@ -64,11 +62,9 @@
 
 			let tdName = document.createElement("td");
 			tdName.innerHTML = array[0]
-			console.log("TDname", tdName);
 
 			let tdScore = document.createElement("td");
 			tdScore.innerHTML = array[1]
-			console.log("TDscore", tdScore);
 
 			tableRow.appendChild(thNum);
 			tableRow.appendChild(tdName);
@@ -78,7 +74,7 @@
 		}
 
 
-		//reset button
+		//button for reseting high scores.  empty highscorelist, put the empty list into storage, refresh the page.
 		var resetButton = document.querySelector(".reset-button");
 
 		resetButton.addEventListener('click', function () {
