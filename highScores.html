@@ -13,9 +13,69 @@
 </head>
 
 <body>
-	BAD DUDE HALL OF FAME:
+	<nav class="nav d-flex">
+		<li class="nav-item p-2">
+			<a class="nav-link active" href="index.html">Go back</a>
+		</li>
+	</nav>
+	<div class="container">
+		<div class="row h-25">
+			<div class="column-md-8 mt-5 p-2">
+				<h1 class="main-display">BAD DUDES HALL OF FAME</h1>
+				<table class="table table-dark mt-5">
+					<thead>
+						<tr>
+							<th scope="col">#</th>
+							<th scope="col">Name</th>
+							<th scope="col">Score</th>
+						</tr>
+					</thead>
+					<tbody id="entries">
+						<tr>
+							<th scope="row">1</th>
+							<td>Mark</td>
+							<td>Otto</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
 
-	<script></script>
+		var highScoresList = localStorage.getItem("highScoreList");
+		console.log(highScoresList);
+
+		var tableEntries = document.querySelector("#entries");
+
+		for (var i = 0; i < highScoresList.length; i++) {
+			createHighScoreTable(highScoresList[i]);
+			console.log("Highscorelist[i]", highScoresList[i]);
+		}
+
+
+
+		function createHighScoreTable(array) {
+			let tableRow = document.createElement("tr");
+
+			let thNum = document.createElement("th");
+			thNum.setAttribute("scope", "row");
+			thNum.textContent = [i];
+
+			let tdName = document.createElement("td");
+			tdName.textContent = array[0]
+			console.log("TDname", tdName);
+
+			let tdScore = document.createElement("td");
+			tdScore.textContent = array[1]
+			console.log("TDscore", tdScore);
+
+			tableRow.appendChild(thNum, tdName, tdScore);
+
+			tableEntries.appendChild(tableRow);
+		}
+
+	</script>
 </body>
 
 </html>

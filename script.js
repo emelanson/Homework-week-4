@@ -229,7 +229,7 @@ function endGame() {
 
 		localStorage.setItem("highScoreList", highScoreList);
 		console.log(highScoreList);
-		window.open("highScore.html", "_self");
+		window.open("highScores.html", "_self");
 	});
 
 }
