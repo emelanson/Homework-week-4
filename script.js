@@ -220,6 +220,13 @@ function endGame() {
 	submitButton.addEventListener("click", function (event) {
 		event.preventDefault();
 
+		HSraw = localStorage.getItem("highScoreList")
+
+		//if there are High scores in the storage, load them to the list.
+		if (HSraw) {
+			highScoreList = JSON.parse(HSraw);
+		};
+
 		var name = submitForm.value;
 		var highScore = [];
 		console.log(name);
@@ -227,7 +234,7 @@ function endGame() {
 		highScoreList.push(highScore);
 
 
-		localStorage.setItem("highScoreList", highScoreList);
+		localStorage.setItem("highScoreList", JSON.stringify(highScoreList));
 		console.log(highScoreList);
 		window.open("highScores.html", "_self");
 	});

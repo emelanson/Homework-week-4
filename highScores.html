@@ -31,19 +31,19 @@
 						</tr>
 					</thead>
 					<tbody id="entries">
-						<tr>
-							<th scope="row">1</th>
-							<td>Mark</td>
-							<td>Otto</td>
-						</tr>
 					</tbody>
 				</table>
+				<button type="button" class="reset-button btn btn-primary btn-lg">
+					RESET THE HIGH SCORES
+				</button>
 			</div>
 		</div>
 	</div>
 	<script type="text/javascript">
 
-		var highScoresList = localStorage.getItem("highScoreList");
+		var HSstring = localStorage.getItem("highScoreList");
+		highScoresList = JSON.parse(HSstring);
+
 		console.log(highScoresList);
 
 		var tableEntries = document.querySelector("#entries");
@@ -63,17 +63,29 @@
 			thNum.textContent = [i];
 
 			let tdName = document.createElement("td");
-			tdName.textContent = array[0]
+			tdName.innerHTML = array[0]
 			console.log("TDname", tdName);
 
 			let tdScore = document.createElement("td");
-			tdScore.textContent = array[1]
+			tdScore.innerHTML = array[1]
 			console.log("TDscore", tdScore);
 
-			tableRow.appendChild(thNum, tdName, tdScore);
+			tableRow.appendChild(thNum);
+			tableRow.appendChild(tdName);
+			tableRow.appendChild(tdScore);
 
 			tableEntries.appendChild(tableRow);
 		}
+
+
+		//reset button
+		var resetButton = document.querySelector(".reset-button");
+
+		resetButton.addEventListener('click', function () {
+			highScoreList = [""];
+			localStorage.setItem("highScoreList", highScoreList);
+			location.reload();
+		});
 
 	</script>
 </body>
